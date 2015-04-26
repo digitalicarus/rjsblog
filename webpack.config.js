@@ -1,0 +1,39 @@
+var path    = require('path')
+,   webpack = require('webpack')
+;
+
+// lot's of help from https://github.com/petehunt/webpack-howto
+module.exports = {
+	entry: [
+		'webpack-dev-server/client?http://0.0.0.0:3000', // WebpackDevServer host and port
+		'webpack/hot/only-dev-server',
+		'./js/app' // Your appʼs entry point
+    ],
+    output: {
+        filename: "js/bundle.js"
+    },
+	plugins: [
+		new webpack.HotModuleReplacementPlugin(),
+		new webpack.NoErrorsPlugin()
+	],
+	resolve: {
+		// require files in app without specifying extensions
+		extensions: ['', '.js', '.json', '.jsx', '.less']
+	},
+    module: {
+        loaders: [
+			{ test: /\.less$/,      loader: 'style-loader!css-loader!less-loader' },
+			{ test: /\.css$/,       loader: 'style-loader!css-loader' },
+			{ test: /\.(png|jpg)$/, loader: 'url-loader?limit=8192'}, // inline base64 URLs for <=8k images, direct URLs for the rest
+			{ 
+				test: /\.jsx?$/, 
+				include: [
+					path.join(__dirname, 'src'),
+					path.join(__dirname, 'js')
+				], 
+				exclude: '/node-modules/', // don't transform all our node modules! 
+				loaders: ['react-hot', 'babel'] // loaders process from right to left
+			}
+        ]
+    }
+};
