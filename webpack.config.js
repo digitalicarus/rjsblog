@@ -5,7 +5,7 @@ var path    = require('path')
 // lot's of help from https://github.com/petehunt/webpack-howto
 module.exports = {
 	entry: [
-		'webpack-dev-server/client?http://0.0.0.0:3000', // WebpackDevServer host and port
+		'webpack-dev-server/client?http://localhost:8080', // WebpackDevServer host and port
 		'webpack/hot/only-dev-server',
 		'./js/app' // Your appʼs entry point
     ],
@@ -18,7 +18,12 @@ module.exports = {
 	],
 	resolve: {
 		// require files in app without specifying extensions
-		extensions: ['', '.js', '.json', '.jsx', '.less']
+		extensions: ['', '.js', '.json', '.jsx', '.less'],
+		alias: {
+			// pretty useful to have a starting point in nested modules
+			'appRoot': path.join(__dirname, 'js'),
+			'vendor': 'appRoot/vendor'
+		}
 	},
     module: {
         loaders: [
@@ -28,8 +33,7 @@ module.exports = {
 			{ 
 				test: /\.jsx?$/, 
 				include: [
-					path.join(__dirname, 'src'),
-					path.join(__dirname, 'js')
+					path.join(__dirname, 'js') // files to apply this loader to
 				], 
 				exclude: '/node-modules/', // don't transform all our node modules! 
 				loaders: ['react-hot', 'babel'] // loaders process from right to left
