@@ -13,5 +13,8 @@ export default Reflux.createActions({
 	},
 	'addPost': function (post) {
 		asyncResult: true
+	},
+	'deletePost': function (id) {
+		asyncResult: true
 	}
 });
