@@ -5,16 +5,26 @@ export default Reflux.createActions({
 		asyncResult: true, /* shortcut for completed/failed children */ 
 		children:    [] // any other subactions
 	},
-	'getPost': function (id) {
+	'getPost': {
 		asyncResult: true
 	},
-	'editPost': function (id, edits) {
+	'editPost': {
 		asyncResult: true
 	},
-	'addPost': function (post) {
+	'addPost': {
 		asyncResult: true
 	},
-	'deletePost': function (id) {
+	'deletePost': {
 		asyncResult: true
-	}
+	},
+	'login': {
+		asyncResult: true
+	},
+	'createUser': {
+		asyncResult: true
+	},
+	'editUser': {
+		asyncResult: true
+	},
+	'getSessionContext': {} 
 });

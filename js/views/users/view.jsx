@@ -4,7 +4,7 @@ import UserStore from 'appRoot/stores/users';
 
 export default React.createClass({
 	render: function () {
-		return <div>list post</div>;
+		return <div>view user</div>;
 	}
 });
  

@@ -1,13 +1,23 @@
 "use strict";
 
-import React         from 'react';
-import Router        from 'react-router';
+import React     from 'react';
+import Router    from 'react-router';
 
-import CSS           from '../css/app.less';
+import CSS       from '../css/app.less';
 
-import About         from 'appRoot/views/about';
-import List          from 'appRoot/views/posts/list';
-import Entry         from 'appRoot/views/posts/entry';
+import AppHeader from 'appRoot/components/appHeader';
+
+import PostList  from 'appRoot/views/posts/list';
+import PostView  from 'appRoot/views/posts/view';
+import PostEdit  from 'appRoot/views/posts/edit';
+
+import UserList  from 'appRoot/views/users/list';
+import UserView  from 'appRoot/views/users/view';
+import UserEdit  from 'appRoot/views/users/edit';
+
+import Login     from 'appRoot/views/login';
+
+import Search    from 'appRoot/views/search';
 
 // This reflux demo app recommended https://github.com/echenley/react-news
 let RouteHandler  = Router.RouteHandler
@@ -23,9 +33,9 @@ let AppLayout = React.createClass({
    render: function () {
 		return (
 			<div className="app-container">
-				<header>
-				</header>
+				<AppHeader />
 				<main>
+					&nbsp;
 					<RouteHandler { ...this.props } /*user={ this.state.user }*/ />
 				</main>
 			</div>
@@ -35,12 +45,58 @@ let AppLayout = React.createClass({
 
 let routes = (
     <Route path="/" handler={ AppLayout }>
-        <Route name="about" path="/about"            handler={ About } />
-        <Route name="entry" path="/entry/:entryId"   handler={ Entry } />
-        <Route name="posts" path="/posts/:pageNum/?"   handler={ List } >
-			<Route name="entryEmbed" path="entry/:entryId" handler={ Entry } />
-		</Route>
-		<NotFoundRoute handler={ List } />
+        <Route 
+			name="list-posts"
+			path="posts/:pageNum/?" 
+			handler={ PostList } 
+			ignoreScrollBehavior 
+		/>
+        <Route 
+			name="view-post"
+			path="post/:postId"
+			handler={ PostView } 
+		/>
+        <Route 
+			name="edit-post" 
+			path="/post/:postId/edit"
+			handler={ PostEdit } 
+		/>
+		<Route
+			name="create-post"
+			path="/post/create"
+			handler={ PostEdit }
+		/>
+		<Route 
+			name="list-users"
+			path="/users" 
+			handler={ UserList } 
+		/>
+		<Route
+			name="create-user"
+			path="/users/create"
+			handler={ UserEdit }
+		/>
+		<Route 
+			name="view-user"
+			path="/users/:userId" 
+			handler={ UserView } 
+		/>
+		<Route 
+			name="edit-user"
+			path="/users/:userId/edit" 
+			handler={ UserEdit }
+		/>
+		<Route 
+			name="login"
+			path="/login" 
+			handler={ Login }
+		/>
+		<Route
+			name="search"
+			path="/search"
+			handler={ Search }
+		/>
+		<NotFoundRoute handler={ PostList } />
     </Route>
 );
 

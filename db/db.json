@@ -1,0 +1,12 @@
+{
+  "posts": [],
+  "users": [
+    {
+      "username": "man",
+      "password": "man",
+      "id": 1
+    }
+  ],
+  "tags": [],
+  "images": []
+}
