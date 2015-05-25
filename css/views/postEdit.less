@@ -1,0 +1,18 @@
+@import "../colors.less";
+@import "../mixins.less";
+
+.edit-post {
+	width: 650px;
+	height: 300px;
+	margin: 0 auto;
+	box-shadow: 0 0 6px 1px #666;
+
+	.ql-toolbar {
+		height: 40px;
+		border-bottom: 1px solid #666
+	}
+	.ql-container{
+		height: ~'calc(100% - 40px)';
+		overflow: auto;
+	}
+}

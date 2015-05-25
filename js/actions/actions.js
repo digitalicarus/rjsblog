@@ -20,6 +20,7 @@ export default Reflux.createActions({
 	'login': {
 		asyncResult: true
 	},
+	'logOut': {},
 	'createUser': {
 		asyncResult: true
 	},

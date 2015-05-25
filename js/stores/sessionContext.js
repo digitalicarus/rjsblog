@@ -2,23 +2,33 @@ import Reflux  from 'reflux';
 import Actions from 'appRoot/actions/actions';
 import Request from 'superagent';
 import Config  from 'appRoot/appConfig';
+import Cookie  from 'appRoot/vendor/cookie';
  
 export default Reflux.createStore({
 	listenables: Actions,
 	endpoint: Config.apiRoot + '/users',
 	context: { loggedIn: false },
-	getInitialState: function () { return this.context; },
+	getInitialState: function () { 
+		this.context          = JSON.parse(Cookie.getItem('session')) || {};
+		this.context.loggedIn = this.context.loggedIn || false; 
+		return this.context; 
+	},
 	getResponseResolver: function (action) {
 		return function (err, res) {
 			if (res.ok && res.body instanceof Array && res.body.length > 0) {
-				this.context          = res.body;
+				this.context          = res.body[0];
 				this.context.loggedIn = true;
-				action.completed(this.context);
 				this.trigger(this.context);
+				action.completed();
+
+				Cookie.setItem('session', JSON.stringify(this.context));
 			} else {
-				action.failed(err);
+				action.failed();
 			} 
 		}.bind(this);
+	},
+	getSessionInfo: function () {
+		return JSON.parse(Cookie.getItem('session'));
 	},
 	onLogin: function (name, pass) {
 		Request
@@ -29,7 +39,14 @@ export default Reflux.createStore({
 			})
 			.end(this.getResponseResolver(Actions.login))
 			;
-	}/*,
+	},
+	onLogOut: function () {
+		Cookie.removeItem('session');
+		this.context = { loggedIn: false };
+		this.trigger(this.context);
+		return true;
+	},
+/*,
 	onCreateUser: function (details) {
 		Request
 			.post(this.endpoint)

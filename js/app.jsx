@@ -51,20 +51,20 @@ let routes = (
 			handler={ PostList } 
 			ignoreScrollBehavior 
 		/>
-        <Route 
-			name="view-post"
-			path="post/:postId"
-			handler={ PostView } 
-		/>
-        <Route 
-			name="edit-post" 
-			path="/post/:postId/edit"
-			handler={ PostEdit } 
-		/>
 		<Route
 			name="create-post"
 			path="/post/create"
 			handler={ PostEdit }
+		/>
+		<Route 
+			name="edit-post" 
+			path="/post/:postId/edit"
+			handler={ PostEdit } 
+		/>
+        <Route 
+			name="view-post"
+			path="post/:postId"
+			handler={ PostView } 
 		/>
 		<Route 
 			name="list-users"
@@ -96,6 +96,7 @@ let routes = (
 			path="/search"
 			handler={ Search }
 		/>
+		<DefaultRoute handler={ PostList } />
 		<NotFoundRoute handler={ PostList } />
     </Route>
 );

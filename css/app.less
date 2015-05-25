@@ -9,6 +9,10 @@ html, body {
 	}
 }
 
+a {
+	cursor: pointer;
+}
+
 .app-container {
 	height: 100%;
 
@@ -79,7 +83,7 @@ fieldset {
 	}
 }  
 
-button {
+button[type="submit"] {
 	background-color: darken(@blue, 20%);
 	line-height: 40px;
 	color: white;
@@ -108,13 +112,17 @@ button {
 		background: radial-gradient(ellipse at center,  #000099 7%,#000055 98%); /* W3C */
 		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000099', endColorstr='#000055',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
 	}
+
+	
 }
 
 
-@import "views/entry.less";
-@import "views/userEdit.less";
-@import "views/login.less";
-@import "components/basicInput.less";
 @import "components/appHeader.less";
+@import "components/basicInput.less";
 @import "components/loader.less";
+@import "views/login.less";
+@import "views/posts/edit.less";
+@import "views/users/edit.less";
+
+@import "vendor/quill.snow.less";
 
