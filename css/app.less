@@ -20,14 +20,14 @@ a {
 		position: fixed;
 		top: 0;
 		width: 100%;
+		min-width: 800px;
 		z-index: 100;
 	}
 	main {
 		width: 100%;
+		min-width: 800px;
 		height: ~'calc(100% - 40px)';
-		//margin: 40px 0 0 0;
 		position: relative;
-		//padding: 40px 40px 200px 40px;
 		padding: 40px 0 0 0;
 	}
 }
@@ -83,16 +83,33 @@ fieldset {
 	}
 }  
 
-button[type="submit"] {
-	background-color: darken(@blue, 20%);
+button {
+	background-color: #bbb;
+	color: black;
+
 	line-height: 40px;
-	color: white;
 	text-transform: uppercase;
 	font-size: 12px;
 	letter-spacing: 1px;
 	padding: 0 10px;
 	border: none;
 	outline: none;
+
+	&[type="submit"] {
+		background-color: darken(@blue, 20%);
+		color: white;
+
+		&:focus,&:hover {
+			background: #000099; /* Old browsers */
+			background: -moz-radial-gradient(center, ellipse cover,  #000099 7%, #000055 98%); /* FF3.6+ */
+			background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(7%,#000099), color-stop(98%,#000055)); /* Chrome,Safari4+ */
+			background: -webkit-radial-gradient(center, ellipse cover,  #000099 7%,#000055 98%); /* Chrome10+,Safari5.1+ */
+			background: -o-radial-gradient(center, ellipse cover,  #000099 7%,#000055 98%); /* Opera 12+ */
+			background: -ms-radial-gradient(center, ellipse cover,  #000099 7%,#000055 98%); /* IE10+ */
+			background: radial-gradient(ellipse at center,  #000099 7%,#000055 98%); /* W3C */
+			filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000099', endColorstr='#000055',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
+		} 
+	}
 
 	box-shadow: 1px 3px 2px 0px #666;
 
@@ -102,18 +119,24 @@ button[type="submit"] {
 		transform: translateY(2px);
 		box-shadow: 1px 1px 2px 0px #666;
 	}
-	&:focus,&:hover {
-		background: #000099; /* Old browsers */
-		background: -moz-radial-gradient(center, ellipse cover,  #000099 7%, #000055 98%); /* FF3.6+ */
-		background: -webkit-gradient(radial, center center, 0px, center center, 100%, color-stop(7%,#000099), color-stop(98%,#000055)); /* Chrome,Safari4+ */
-		background: -webkit-radial-gradient(center, ellipse cover,  #000099 7%,#000055 98%); /* Chrome10+,Safari5.1+ */
-		background: -o-radial-gradient(center, ellipse cover,  #000099 7%,#000055 98%); /* Opera 12+ */
-		background: -ms-radial-gradient(center, ellipse cover,  #000099 7%,#000055 98%); /* IE10+ */
-		background: radial-gradient(ellipse at center,  #000099 7%,#000055 98%); /* W3C */
-		filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000099', endColorstr='#000055',GradientType=1 ); /* IE6-9 fallback on horizontal gradient */
-	}
 
-	
+
+}
+
+img.profile-img {
+	width: 80px;
+	height: 80px;
+	border: none;
+
+	margin-right: 15px;
+
+	vertical-align: middle;
+
+	&.small {
+		border-radius: 25px;
+		width: 50px;
+		height: 50px;
+	}
 }
 
 
@@ -122,7 +145,9 @@ button[type="submit"] {
 @import "components/loader.less";
 @import "views/login.less";
 @import "views/posts/edit.less";
+@import "views/posts/list.less";
 @import "views/users/edit.less";
+@import "views/users/list.less";
 
 @import "vendor/quill.snow.less";
 

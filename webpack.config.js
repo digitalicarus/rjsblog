@@ -14,7 +14,11 @@ module.exports = {
     },
 	plugins: [
 		new webpack.HotModuleReplacementPlugin(),
-		new webpack.NoErrorsPlugin()
+		new webpack.NoErrorsPlugin(),
+		// example of polyfilling with webpack https://gist.github.com/Couto/b29676dd1ab8714a818f
+		new webpack.ProvidePlugin({
+			'arrayutils': 'imports?this=>global!exports?global.arrayutils!arrayutils'
+		})
 	],
 	resolve: {
 		// require files in app without specifying extensions

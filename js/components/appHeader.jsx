@@ -18,6 +18,18 @@ export default React.createClass({
 		Actions.logOut();
 		this.transitionTo('/');
 	},
+	getGreeting: function () {
+		var greeting = '';
+		if (this.state.session.username) {
+			console.log(this.state.session);
+			greeting = 'Hello' + this.state.session.firstName ? 
+				this.state.session.firstName : this.state.session.username
+				;
+			greeting += ', ';
+		}
+
+		return greeting;
+	},
 	render: function () {
 		console.log(this.state.session);
 		return (
@@ -27,7 +39,9 @@ export default React.createClass({
 					<input type="search" placeholder="search" />
 					{
 						this.state.session.loggedIn ? 
-							<Link to="create-post">Write</Link> : 
+							(<Link to="create-post">
+								Hello {this.state.session.username}, write something!
+							</Link>) : 
 							<Link to="create-user">Join</Link>
 					}
 					{

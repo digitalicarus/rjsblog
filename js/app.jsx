@@ -16,8 +16,10 @@ import UserView  from 'appRoot/views/users/view';
 import UserEdit  from 'appRoot/views/users/edit';
 
 import Login     from 'appRoot/views/login';
-
 import Search    from 'appRoot/views/search';
+
+// polyfills
+import ArrayUtils from 'appRoot/vendor/polyfills/arrayutils';
 
 // This reflux demo app recommended https://github.com/echenley/react-news
 let RouteHandler  = Router.RouteHandler

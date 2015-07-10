@@ -16,7 +16,7 @@ export default React.createClass({
 		return (
 			<div className="basic-input" {...this.props} >
 				<input {...this.props} />
-				<aside>&nbsp;{this.props.helptext}</aside>
+				<aside>{this.props.helptext || ' '}</aside>
 			</div>
 		);
 	}

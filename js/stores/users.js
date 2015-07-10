@@ -17,7 +17,8 @@ export default Reflux.createStore({
 	*/
 	users: [],
 	endpoint: Config.apiRoot + '/users',
-	getInitialState: function () { 
+	init: function () {
+		console.log("get initial state");
 		Request
 			.get(this.endpoint)
 			.end(function (err, res) {
@@ -27,6 +28,10 @@ export default Reflux.createStore({
 				} else {
 				}
 			}.bind(this)); 
+	},
+	// called when mixin is used to init the component state
+	getInitialState: function () { 
+		return this.users;
 	},
 	modifyAndLogin: function (method, details, action) {
 		Request

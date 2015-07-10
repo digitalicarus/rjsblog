@@ -1,32 +1,92 @@
 import React     from 'react';
 import Reflux    from 'reflux';
 import Quill     from 'quill';
+import Moment    from 'moment';
 
+import Config     from 'appRoot/appConfig';
+import Actions    from 'appRoot/actions/actions';
 import BasicInput from 'appRoot/components/basicInput';
+import Loader     from 'appRoot/components/loader';
+import PostStore  from 'appRoot/stores/posts';
+import FT         from 'appRoot/fnTemplate';
+
+import Session    from 'appRoot/stores/sessionContext';
 
 export default React.createClass({
+	mixins: [
+		Reflux.connect(Session, 'session')
+	],
+	getInitialState: function () {
+		return { loading: true };
+	},
+	componentWillMount: function () {
+		this.editMode   = this.props.params.hasOwnProperty('postId');
+		this.createMode = !this.editMode;
+		this.postId     = this.editMode ? this.props.params.postId : null;
+
+		this.setState({ loading: this.editMode ? true : false });
+
+		if (this.editMode) {
+			Actions.getPost(this.postId)
+				.then(function (post) {
+					setTimeout(function () {
+					this.setState({ post: post, loading: false });
+					}.bind(this), 2000);
+				}.bind(this))
+				['catch'](function (err) {
+					this.setState({ error: err, loading: false });
+				}.bind(this));
+		}
+	},
 	componentDidMount: function () {
-		this.quill = new Quill(this.refs.editor.getDOMNode(), { 
-			theme: 'snow', 
-			modules: {
-				'link-tooltip': true,
-				'image-tooltip': true,
-				'toolbar': {
-					container: this.refs.toolbar.getDOMNode()
+		var newPostTmpl = '<div>Hello World!</div><div><b>This</b> is my story...</div><div><br/></div>';
+		this.initQuill(newPostTmpl);
+	},
+	initQuill: function (html) {
+		if (!this.quill) {
+			this.quill = new Quill(this.refs.editor.getDOMNode(), { 
+				theme: 'snow', 
+				modules: {
+					'link-tooltip': true,
+					'image-tooltip': true,
+					'toolbar': {
+						container: this.refs.toolbar.getDOMNode()
+					}
 				}
-			}
-		});
+			}); 
+		}
+		this.quill.setHTML(html);
 	},
 	submit: function (e) {
-		console.log(this.quill.getHTML().replace(/data-reactid="[^"]+"/g, ''));
+		var postBody = this.quill.getHTML().replace(/data-reactid="[^"]+"/g, '');
+
+		console.log(this.state.session);
+
+		Actions.addPost({
+			title: this.refs.title.getDOMNode().value,
+			body: postBody,
+			user: this.state.session.id,
+			date: Moment().toString(),
+			summary: this.quill.getText().slice(0, Config.postSummaryLength)
+		})
+		.then(function (result) {
+		})
+		;
 		e.preventDefault();
 	},
 	// form parts of component is always the same so render won't diff
 	render: function () {
+		console.log('loading', this.state.loading);
 		return (
-			<form className="post-edit" onSubmit={this.submit}>
-				<fieldset>
-					<BasicInput type="text"  name="title" placeholder="post title" />
+			<form 
+				className="post-edit" 
+				onSubmit={this.submit} 
+			>
+				{ this.state.loading ? <Loader /> : [] }
+				<fieldset
+					style={{ display: this.state.loading || this.state.error ? 'none' : 'block'}}
+				>
+					<BasicInput type="text" ref="title" name="title" placeholder="post title" value={this.postTitle} />
 					<hr/>
 					<br/>
 					<div className="rich-editor">
@@ -147,12 +207,10 @@ export default React.createClass({
 							</span>
 						</div>
 						<div ref="editor">
-							<div>Hello World!</div>
-							<div><b>This</b> is my story...</div>
-							<div><br/></div>
+
 						</div>
 					</div>
-					<BasicInput name="tags" type="text" placeholder="tags" helptext="comma separated" />
+					<BasicInput name="tags" type="text" ref="tags" placeholder="tags" helptext="comma separated" />
 					<button type="submit">Post</button>
 				</fieldset>
 			</form>
