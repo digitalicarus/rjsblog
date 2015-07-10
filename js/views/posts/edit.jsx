@@ -58,7 +58,12 @@ export default React.createClass({
 		this.quill.setHTML(html);
 	},
 	submit: function (e) {
-		var postBody = this.quill.getHTML().replace(/data-reactid="[^"]+"/g, '');
+		var postBody = this.quill.getHTML().replace(/data-reactid="[^"]+"/g, '')
+		,   fullText = this.quill.getText()
+		,   summary  = fullText.slice(0, Config.postSummaryLength)
+		;
+
+		if (fullText.length > summary.length) { summary += '<br/> ...'; } 
 
 		console.log(this.state.session);
 
@@ -66,8 +71,8 @@ export default React.createClass({
 			title: this.refs.title.getDOMNode().value,
 			body: postBody,
 			user: this.state.session.id,
-			date: Moment().toString(),
-			summary: this.quill.getText().slice(0, Config.postSummaryLength)
+			date: Moment().valueOf(), // unix UTC milliseconds
+			summary: summary
 		})
 		.then(function (result) {
 		})

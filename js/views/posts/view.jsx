@@ -40,7 +40,11 @@ export default React.createClass({
 
 	},
 	getPost: function () {
-		this.setState({loading: true});
+		if (this.isMounted()) {
+			this.setState({loading: true});
+		} else {
+			this.state.loading = true;
+		}
 
 		Actions.getPost(this.props.params.postId)
 		.then(function (data) {
@@ -70,30 +74,31 @@ export default React.createClass({
  
 		return this.props.mode === 'summary' ? (
 			// SUMMARY / LIST VIEW
-			<li key={post.id} className="post-view-summary">
+			<li className="post-view-summary">
 				<aside>
 					<img className="profile-img small" src={user.profileImageData} />
 					<div className="post-metadata">
 						<strong>{this.getPostTitle(post)}</strong>
 						<span className="user-name">{name}</span>
-						<em>{Moment(post.date).format(dateFormat)}</em> 
+						<em>{Moment(post.date, 'x').format(dateFormat)}</em> 
 					</div>
 				</aside>
 				<summary dangerouslySetInnerHTML={{__html: post.summary}}></summary>
-				&nbsp;&nbsp;
 				<Link to="view-post" params={{ postId: post.id }}>read more</Link> 
 			</li> 
 		) : (
 			// FULL POST VIEW
-			<div className="post-view-list">
+			<div className="post-view-full">
 				<h2>
 					<img className="profile-img" src={user.profileImageData} />
 					<div className="post-metadata">
 						<strong>{this.getPostTitle(post)}</strong>
 						<span className="user-name">{name}</span>
-						<em>{Moment(post.date).format(dateFormat)}</em> 
+						<em>{Moment(post.date, 'x').format(dateFormat)}</em> 
 					</div> 
 				</h2>
+				<section className="post-body" dangerouslySetInnerHTML={{__html: post.body}}>
+				</section>
 			</div>
 
 		);

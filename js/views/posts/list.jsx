@@ -34,7 +34,7 @@ export default React.createClass({
 
 		window.addEventListener('scroll', this.onScroll);
 	},
-	componentWillUnMount: function () {
+	componentWillUnmount: function () {
 		window.removeEventListener('scroll', this.onScroll);
 	},
 	onScroll: function (e) {
@@ -42,19 +42,15 @@ export default React.createClass({
 		,   scrollDiff = Math.abs(body.scrollHeight - (body.scrollTop + body.clientHeight))
 		;
 
-		console.log('scroll');
 		if (!this.state.loadingMore && scrollDiff < 100) {
 			this.getNextPage();
 		}
 	},
 	getNextPage: function () {
 		this.setState({loadingMore: true});
-		console.log('loading', this.state.page);
 
 		Actions.getPostsByPage(this.state.page)
 			.then(function (data) {
-				//this.state.posts = this.state.posts.concat(data);
-				console.log("DATA", data, this.state.posts);
 				this.setState({
 					loadingMore: false,
 					posts: this.state.posts.concat(data),
@@ -64,7 +60,7 @@ export default React.createClass({
 	},
 	render: function () {
 		var postsUI = this.state.posts.map(function (post) {
-			return <PostView post={post} mode="summary"/>;
+			return <PostView key={post.id} post={post} mode="summary"/>;
 		});
 
 		return (

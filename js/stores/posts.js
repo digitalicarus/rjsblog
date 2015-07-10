@@ -43,6 +43,9 @@ export default Reflux.createStore({
 		Request
 			.get(this.endpoint)
 			.query({
+				// newest to oldest
+				'_sort':  'date',
+				'_order': 'DESC',
 				'_start': Config.pageSize * (page-1),
 				'_end':   Config.pageSize * (page-1) + Config.pageSize
 			})

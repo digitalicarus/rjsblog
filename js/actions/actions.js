@@ -5,6 +5,9 @@ export default Reflux.createActions({
 		asyncResult: true, /* shortcut for completed/failed children */ 
 		children:    [] // any other subactions
 	},
+	'getPostsBySearch': {
+		asyncResult: true
+	},
 	'getPost': {
 		asyncResult: true
 	},
