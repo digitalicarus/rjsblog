@@ -45,20 +45,5 @@ export default Reflux.createStore({
 		this.context = { loggedIn: false };
 		this.trigger(this.context);
 		return true;
-	},
-/*,
-	onCreateUser: function (details) {
-		Request
-			.post(this.endpoint)
-			.send(details)
-			.end(this.getResponseResolver(Actions.createUser))
-			;
-	},
-	onEditUser: function (details) {
-		Request
-			.post(this.endpoint)
-			.send(details)
-			.end(this.getResponseResolver(Actions.editUser))
-			;
-	}*/
+	}
 });

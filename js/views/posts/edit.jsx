@@ -1,4 +1,5 @@
 import React     from 'react';
+import Router    from 'react-router';
 import Reflux    from 'reflux';
 import Quill     from 'quill';
 import Moment    from 'moment';
@@ -14,7 +15,8 @@ import Session    from 'appRoot/stores/sessionContext';
 
 export default React.createClass({
 	mixins: [
-		Reflux.connect(Session, 'session')
+		Reflux.connect(Session, 'session'),
+		Router.Navigation
 	],
 	getInitialState: function () {
 		return { loading: true };
@@ -30,7 +32,7 @@ export default React.createClass({
 			Actions.getPost(this.postId)
 				.then(function (post) {
 					setTimeout(function () {
-					this.setState({ post: post, loading: false });
+						this.setState({ post: post, loading: false });
 					}.bind(this), 2000);
 				}.bind(this))
 				['catch'](function (err) {
@@ -63,10 +65,6 @@ export default React.createClass({
 		,   summary  = fullText.slice(0, Config.postSummaryLength)
 		;
 
-		if (fullText.length > summary.length) { summary += '<br/> ...'; } 
-
-		console.log(this.state.session);
-
 		Actions.addPost({
 			title: this.refs.title.getDOMNode().value,
 			body: postBody,
@@ -75,13 +73,14 @@ export default React.createClass({
 			summary: summary
 		})
 		.then(function (result) {
-		})
+			// go to newly created entry
+			this.transitionTo('view-post', {postId: result.body.id});
+		}.bind(this))
 		;
 		e.preventDefault();
 	},
 	// form parts of component is always the same so render won't diff
 	render: function () {
-		console.log('loading', this.state.loading);
 		return (
 			<form 
 				className="post-edit" 
@@ -91,7 +90,12 @@ export default React.createClass({
 				<fieldset
 					style={{ display: this.state.loading || this.state.error ? 'none' : 'block'}}
 				>
-					<BasicInput type="text" ref="title" name="title" placeholder="post title" value={this.postTitle} />
+					<BasicInput 
+						type="text" 
+						ref="title" 
+						name="title" 
+						defaultValue={this.post ? this.post.title : null}
+						placeholder="post title" value={this.postTitle} />
 					<hr/>
 					<br/>
 					<div className="rich-editor">
@@ -215,8 +219,7 @@ export default React.createClass({
 
 						</div>
 					</div>
-					<BasicInput name="tags" type="text" ref="tags" placeholder="tags" helptext="comma separated" />
-					<button type="submit">Post</button>
+					<button type="submit">{this.editMode ? 'Edit Post' : 'Create Post'}</button>
 				</fieldset>
 			</form>
 		);

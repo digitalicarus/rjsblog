@@ -30,5 +30,7 @@ export default Reflux.createActions({
 	'editUser': {
 		asyncResult: true
 	},
+	'search': {
+	},
 	'getSessionContext': {} 
 });

@@ -4,8 +4,6 @@ import React from 'react';
 
 let Types = React.PropTypes;
 
-console.log(Types);
-
 export default React.createClass({
 	propTypes: {
 		id:        Types.string,

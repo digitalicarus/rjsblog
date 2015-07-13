@@ -5,11 +5,8 @@ import Moment     from 'moment';
 
 import Actions    from 'appRoot/actions/actions';
 
-import PostStore  from 'appRoot/stores/posts';
-import UserStore  from 'appRoot/stores/users';
 import UserList   from 'appRoot/views/users/list';
-
-import PostView   from 'appRoot/views/posts/view';
+import PostList   from 'appRoot/components/posts/list';
 
 // This reflux demo app recommended https://github.com/echenley/react-news
 let RouteHandler  = Router.RouteHandler
@@ -20,58 +17,12 @@ let RouteHandler  = Router.RouteHandler
 ;
  
 export default React.createClass({
-	mixins: [
-		Reflux.connect(UserStore, 'users')
-	],
-	getInitialState: function () {
-		return {
-			page: 1,
-			posts: []
-		};
-	},
-	componentWillMount: function () {
-		this.getNextPage();
-
-		window.addEventListener('scroll', this.onScroll);
-	},
-	componentWillUnmount: function () {
-		window.removeEventListener('scroll', this.onScroll);
-	},
-	onScroll: function (e) {
-		var body = document.body
-		,   scrollDiff = Math.abs(body.scrollHeight - (body.scrollTop + body.clientHeight))
-		;
-
-		if (!this.state.loadingMore && scrollDiff < 100) {
-			this.getNextPage();
-		}
-	},
-	getNextPage: function () {
-		this.setState({loadingMore: true});
-
-		Actions.getPostsByPage(this.state.page)
-			.then(function (data) {
-				this.setState({
-					loadingMore: false,
-					posts: this.state.posts.concat(data),
-					page: this.state.page + 1
-				});
-			}.bind(this)); 
-	},
-	render: function () {
-		var postsUI = this.state.posts.map(function (post) {
-			return <PostView key={post.id} post={post} mode="summary"/>;
-		});
-
+   render: function () {
 		return (
-			<div className="post-list">
-				<div className="post-list-container">
-					<ul>
-						{postsUI}
-					</ul>
-				</div>
+			<div className="post-list-view">
+				<PostList />
 				<div className="users-and-tags">
-					<UserList/>
+					<UserList />
 				</div>
 			</div>
 		);

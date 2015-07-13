@@ -2,6 +2,7 @@ import Reflux  from 'reflux';
 import Actions from 'appRoot/actions/actions';
 import Request from 'superagent';
 import Config  from 'appRoot/appConfig';
+import Aug     from 'aug';
 
 export default Reflux.createStore({
 	listenables: Actions,
@@ -13,7 +14,6 @@ export default Reflux.createStore({
 		this.listenTo(Actions.getPosts, this.onGetPosts);
 	},
 	*/
-	posts: [],
 	endpoint: Config.apiRoot + '/posts',
 	fieldConfigs: {
 		title: {
@@ -22,77 +22,83 @@ export default Reflux.createStore({
 			}
 		}
 	},
-	getInitialState: function () { return this.posts; },
-	/**
-	 * _addPosts add posts to internal collection
-	 * @param posts an array of posts
-	 */
-	_addPosts: function (posts, startIdx) {
-		//console.debug("posts store: adding posts to store", posts);
-		posts.forEach(function (v,i) {
-			this.posts[i+startIdx] = v;
-		}.bind(this));
-		this.trigger(this.posts);
-	},
 	//-- ACTION HANDLERS
-	onGetPostsByPage: function (page = 1) {
+	onGetPostsByPage: function (page = 1, params) {
 		var start = Config.pageSize * (page-1)
 		,   end   = start + Config.pageSize
-		;
-
-		Request
-			.get(this.endpoint)
-			.query({
+		,   query = {
 				// newest to oldest
 				'_sort':  'date',
 				'_order': 'DESC',
 				'_start': Config.pageSize * (page-1),
 				'_end':   Config.pageSize * (page-1) + Config.pageSize
-			})
-			.end(function (err, res) {
-				if (res.ok) {
-					this._addPosts(res.body, start);
-					Actions.getPostsByPage.completed(res.body);
-				} else {
-					Actions.getPostsByPage.failed(err);
-				}
-			}.bind(this)); 
+			}
+		;
+
+		if (typeof params === 'object') { 
+			query = Aug(query, params);
+		}
+
+		function req () {
+			Request
+				.get(this.endpoint)
+				.query(query)
+				.end(function (err, res) {
+					var results = res.body;
+					if (res.ok) {
+						// TODO: if q param (search) filter by other params, cause it doesn't
+						// problem with json-server, realistically we'd fix this on the server
+						if (params.q) {
+							results = results.filter(function (post) {
+								return params.user ? post.user == params.user : true;
+							});
+						}
+						Actions.getPostsByPage.completed(results);
+					} else {
+						Actions.getPostsByPage.failed(err);
+					}
+				}.bind(this)); 
+		}
+
+		Config.loadTimeSimMs ? setTimeout(req.bind(this), Config.loadTimeSimMs) : req();
+
 	},
 	onGetPost: function (id) {
-		Request
-			.get(this.endpoint)
-			.query({
-				id: id
-			})
-			.end(function (err, res) {
-				if (res.ok) {
-					if (res.body.length > 0) {
-						Actions.getPost.completed(res.body[0]);
+		function req () {
+			Request
+				.get(this.endpoint)
+				.query({
+					id: id
+				})
+				.end(function (err, res) {
+					if (res.ok) {
+						if (res.body.length > 0) {
+							Actions.getPost.completed(res.body[0]);
+						} else {
+							Actions.getPost.failed('Post (' + id + ') not found');
+						}
 					} else {
-						Actions.getPost.failed('Post (' + id + ') not found');
-					}
-				} else {
-					Actions.getPost.failed(err);
-				} 
-			});
+						Actions.getPost.failed(err);
+					} 
+				});
+		}
+		Config.loadTimeSimMs ? setTimeout(req.bind(this), Config.loadTimeSimMs) : req();
 	},
 	onEditPost: function (edits) {
 	},
 	onAddPost: function (post) {
-		for (let member in post) {
-
+		function req () {
+			Request
+				.post(this.endpoint)
+				.send(post)
+				.end(function (err, res) {
+					if (res.ok) {
+						Actions.addPost.completed(res);
+					} else {
+						Actions.addPost.completed();
+					}
+				});
 		}
-
-		Request
-			.post(this.endpoint)
-			.send(post)
-			.end(function (err, res) {
-				if (res.ok) {
-					Actions.addPost.completed();
-				} else {
-					Actions.addPost.completed();
-				}
-			})
-			;
+		Config.loadTimeSimMs ? setTimeout(req.bind(this), Config.loadTimeSimMs) : req();
 	}
 });

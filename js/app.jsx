@@ -37,7 +37,6 @@ let AppLayout = React.createClass({
 			<div className="app-container">
 				<AppHeader />
 				<main>
-					&nbsp;
 					<RouteHandler { ...this.props } /*user={ this.state.user }*/ />
 				</main>
 			</div>

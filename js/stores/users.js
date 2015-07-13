@@ -18,7 +18,6 @@ export default Reflux.createStore({
 	users: [],
 	endpoint: Config.apiRoot + '/users',
 	init: function () {
-		console.log("get initial state");
 		Request
 			.get(this.endpoint)
 			.end(function (err, res) {

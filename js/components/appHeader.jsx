@@ -16,12 +16,12 @@ export default React.createClass({
 	],
 	logOut: function () {
 		Actions.logOut();
+		// from the navigation mixin
 		this.transitionTo('/');
 	},
 	getGreeting: function () {
 		var greeting = '';
 		if (this.state.session.username) {
-			console.log(this.state.session);
 			greeting = 'Hello' + this.state.session.firstName ? 
 				this.state.session.firstName : this.state.session.username
 				;
@@ -30,25 +30,37 @@ export default React.createClass({
 
 		return greeting;
 	},
+	componentWillMount: function () {
+		var searchVal = this.context.router.getCurrentQuery().query;
+		Actions.search(searchVal);
+	},
+	search: function () {
+		var searchVal = this.refs.search.getDOMNode().value;
+		Actions.search(searchVal);
+	},
 	render: function () {
-		console.log(this.state.session);
 		return (
 			<header className="app-header">
 				<Link to="/"><h1>Re&#923;ction</h1></Link>
 				<section className="account-ctrl">
-					<input type="search" placeholder="search" />
-					{
-						this.state.session.loggedIn ? 
-							(<Link to="create-post">
-								Hello {this.state.session.username}, write something!
-							</Link>) : 
-							<Link to="create-user">Join</Link>
-					}
-					{
-						this.state.session.loggedIn ? 
-							<a onClick={this.logOut}>Log Out</a> :
-							<Link to="login">Log In</Link> 
-					}
+					<input 
+						ref="search" 
+						type="search" 
+						placeholder="search" 
+						defaultValue={this.state.initialQuery}
+						onChange={this.search} />
+						{
+							this.state.session.loggedIn ? 
+								(<Link to="create-post">
+									Hello {this.state.session.username}, write something!
+								</Link>) : 
+								<Link to="create-user">Join</Link>
+						}
+						{
+							this.state.session.loggedIn ? 
+								<a onClick={this.logOut}>Log Out</a> :
+								<Link to="login">Log In</Link> 
+						}
 				</section>
 			</header> 
 		);

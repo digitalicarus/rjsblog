@@ -9,7 +9,19 @@
 	position: absolute;
 	top: 50%;
 	left: 50%;
-	
+
+	&.inline {
+		display: block;
+		position: initial;
+		margin: 0 auto;
+		min-height: 80px;
+
+		aside {
+			// vertical center
+			margin-top: 80px / 2 - @tileWidth / 2;
+		}
+	}
+
 	margin-left: -(@width + 2 * @numTiles) / 2;
 	margin-top: -(@tileWidth) / 2;
 	width: @width + @numTiles * @margins * 2;

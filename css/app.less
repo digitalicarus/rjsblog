@@ -17,8 +17,9 @@ a {
 	height: 100%;
 
 	.app-header {
-		position: fixed;
+		position: absolute;
 		top: 0;
+		height: 40px;
 		width: 100%;
 		min-width: 800px;
 		z-index: 100;
@@ -27,8 +28,14 @@ a {
 		width: 100%;
 		min-width: 800px;
 		height: ~'calc(100% - 40px)';
-		position: relative;
-		padding: 40px 0 0 0;
+		position: absolute;
+		top: 40px;
+		//padding: 40px 0 0 0;
+
+		&>* {
+			overflow-y: auto;
+			height: 100%;
+		}
 	}
 }
 
@@ -143,6 +150,7 @@ img.profile-img {
 @import "components/appHeader.less";
 @import "components/basicInput.less";
 @import "components/loader.less";
+@import "components/posts/list.less";
 @import "views/login.less";
 @import "views/posts/edit.less";
 @import "views/posts/list.less";

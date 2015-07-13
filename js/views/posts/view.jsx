@@ -9,6 +9,8 @@ import Actions     from 'appRoot/actions/actions';
 import PostStore   from 'appRoot/stores/posts';
 import UserStore   from 'appRoot/stores/users';
 
+import Session     from 'appRoot/stores/sessionContext';
+
 let dateFormat    = 'MM/DD/YYYY HH:mm:ss'
 ,   RouteHandler  = Router.RouteHandler
 ,   Route         = Router.Route
@@ -18,6 +20,7 @@ let dateFormat    = 'MM/DD/YYYY HH:mm:ss'
  
 export default React.createClass({
 	mixins: [
+		Reflux.connect(Session, 'session'),
 		Reflux.connect(UserStore, 'users')
 	],
 	getInitialState: function () {
@@ -84,7 +87,17 @@ export default React.createClass({
 					</div>
 				</aside>
 				<summary dangerouslySetInnerHTML={{__html: post.summary}}></summary>
+				&nbsp;
 				<Link to="view-post" params={{ postId: post.id }}>read more</Link> 
+				{
+					user.id === this.state.session.id ? (
+						<div>
+							<Link to="edit-post" params={{ postId: post.id }}>
+								<button>edit post</button>
+							</Link>
+						</div>
+					) : ''
+				}
 			</li> 
 		) : (
 			// FULL POST VIEW
