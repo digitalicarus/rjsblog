@@ -84,18 +84,16 @@ export default Reflux.createStore({
 		}
 		Config.loadTimeSimMs ? setTimeout(req.bind(this), Config.loadTimeSimMs) : req();
 	},
-	onEditPost: function (edits) {
-	},
-	onAddPost: function (post) {
+	onModifyPost: function (post, id) {
 		function req () {
 			Request
-				.post(this.endpoint)
+				[id ? 'put' : 'post'](id ? this.endpoint+'/'+id : this.endpoint)
 				.send(post)
 				.end(function (err, res) {
 					if (res.ok) {
-						Actions.addPost.completed(res);
+						Actions.modifyPost.completed(res);
 					} else {
-						Actions.addPost.completed();
+						Actions.modifyPost.completed();
 					}
 				});
 		}

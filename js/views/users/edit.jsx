@@ -1,12 +1,16 @@
-import React     from 'react';
+import React     from 'react/addons'; // react with addons
 import Reflux    from 'reflux';
+import Router    from 'react-router';
 
 import BasicInput   from 'appRoot/components/basicInput';
 import Actions      from 'appRoot/actions/actions';
 import SessionStore from 'appRoot/stores/sessionContext';
 import UserStore    from 'appRoot/stores/users';
 
-let emptyRegex = /^\s*$/;
+// use {symbolA, symbolB} notation to import multiple items from a file with multiple exports
+import {validate, formMixins} from 'appRoot/utility';
+
+let update = React.addons.update;
 
 /*
 	a simple, albeit non-secure hash from string
@@ -25,37 +29,70 @@ function getHashCode (str) {
 export default React.createClass({
 	mixins: [
 		Reflux.connect(SessionStore, 'session'),
-		Reflux.connect(UserStore, 'users')
+		Reflux.connect(UserStore, 'users'),
+		Router.Navigation,
+		formMixins
 	],
+	getInitialState: function () {
+		return { validity: {} };
+	},
+	constraints: {
+		'username': {
+			required: true,
+			minlength: 3
+		},
+		'password': {
+			required: true,
+			minlength: 5
+		},
+		'blogName': {
+			required: true,
+			minlength: 5
+		}
+	},
 	editUser: function (e) {
 		var detail = {}
-		,   usernameEle = this.getInputEle('username')
-		,   existing
+		,   validationState = {}
+		,   hasErrors = false
 		;
 
 		e.preventDefault();
 
+		// node list isn't necessarily an array but can be iterable
 		Array.prototype.forEach.call(
-			e.target.querySelectorAll('input'),
+			this.refs.form.getDOMNode().querySelectorAll('input'),
 			function (v) {
-				if(!emptyRegex.test(v.value)) {
-					detail[v.getAttribute('name')] = v.value;
-				}
-			});
+				let fieldName = v.getAttribute('name')
+				,   errors
+				;
 
-		existing = this.state.users.filter(function (v) { return v.username === detail.username; }).length > 0;
+				detail[fieldName] = v.value;
+
+				errors = fieldName === 'username' ? 
+					this.validateField(fieldName, update(this.constraints.username, { 
+						exclusive: { $set: this.state.users.map(function (v) { return v.username; }) }
+					})) :
+					this.validateField(fieldName);
+
+				!hasErrors && errors.length && v.focus(); // first encountered error
+				hasErrors = hasErrors || errors.length;
+				validationState[fieldName] = { $set: errors.length ? errors[0].msg : null };
+			}.bind(this));
+
 
 		if (this.state.profileImageData) {
 			detail.profileImageData = this.state.profileImageData;
 		}
 
-		if (existing) {
-			usernameEle.setCustomValidity('name taken');
-		} else {
-			usernameEle.setCustomValidity('');
-			(this.loggedIn ? Actions.editUser : Actions.createUser)(detail);
+		this.setState(update(this.state, { validity: validationState }));
+		if (!hasErrors) {
+			(this.loggedIn ? Actions.editUser : Actions.createUser)(detail)
+				.then(function (result) {
+					// go to newly created entry
+					this.transitionTo('view-user', {userId: result.id});
+				}.bind(this))
+			; 
 		}
-
 	},
 	imageLoadedHandler: function (e) {
 		var imageSize = atob(decodeURI(e.target.result).replace(/^.*base64,/,'')).length;
@@ -74,9 +111,6 @@ export default React.createClass({
 
 		reader.onload = this.imageLoadedHandler;
 		reader.readAsDataURL(file);
-	},
-	getInputEle: function (ref) {
-		return this.refs[ref] ? this.refs[ref].getDOMNode().querySelector('input') : undefined;
 	},
 	setPlaceholderImage: function (e) {
 		var fileVal = this.getInputEle('profileImage');
@@ -100,8 +134,11 @@ export default React.createClass({
 	render: function () {
 		var isnew = !this.loggedIn;
 
+		console.log("VALIDITY", this.state.validity);
+
+		// noValidate disables native validation to avoid react collisions with native state
 		return (
-			<form className="user-edit" name="useredit" onSubmit={this.editUser}>
+			<form ref="form" className="user-edit" name="useredit" onSubmit={this.editUser} noValidate>
 			<fieldset>
 				<legend>{isnew ? 'become an ' : 'edit'} author</legend>
 
@@ -109,16 +146,17 @@ export default React.createClass({
 					type="text"
 					name="blogName" 
 					placeholder="blog name" 
+					error={this.state.validity.blogName}
 					autoFocus />
 				<hr/>
 				{ isnew && 
 					<BasicInput 
 						type="text" 
-						ref ="username"
 						name="username" 
 						placeholder="username" 
 						minLength="3"
-						required /> 
+						error={this.state.validity.username}
+						/> 
 				}
 				{ isnew && 
 					<BasicInput 
@@ -126,6 +164,7 @@ export default React.createClass({
 						name="password" 
 						minLength="6" 
 						placeholder="password" 
+						error={this.state.validity.password}
 						required /> 
 				}
 				{ isnew && <br/> }
@@ -141,10 +180,7 @@ export default React.createClass({
 				<BasicInput type="text"  name="firstName" placeholder="first name" />
 				<BasicInput type="text"  name="lastName"  placeholder="last name" />
 				<BasicInput type="email" name="email"     placeholder="email" />
-				<hr/>
-				<BasicInput type="text"  name="twitter"  placeholder="twitter name" />
-				<BasicInput type="url"   name="facebook" placeholder="facebook link" />
-				
+   			
 				<button type="submit">{ isnew ? "I'm ready to write" : "make changes" }</button>
 			</fieldset>
 			</form>

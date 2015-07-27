@@ -32,14 +32,16 @@ export default Reflux.createStore({
 	getInitialState: function () { 
 		return this.users;
 	},
-	modifyAndLogin: function (method, details, action) {
+	modifyUser: function (method, details, action) {
 		Request
 			[method](this.endpoint)
 			.send(details)
 			.end(function (err, res) {
 				if (res.ok) {
-					Actions.login(res.body);
-					action.completed(res.body);
+					Actions.login(res.body.username, res.password)
+						.then(function () {
+							action.completed(res.body);
+						});
 				} else {
 					action.failed(err);
 				} 
@@ -47,9 +49,10 @@ export default Reflux.createStore({
 			; 
 	},
 	onCreateUser: function (details) {
-		this.modifyAndLogin('post', details, Actions.createUser);
+		console.log("create user action", this);
+		this.modifyUser('post', details, Actions.createUser);
 	},
 	onEditUser: function (details) {
-		this.modifyAndLogin('put', details, Actions.editUser);
+		this.modifyUser('put', details, Actions.editUser);
 	} 
 });

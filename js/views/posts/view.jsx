@@ -11,6 +11,8 @@ import UserStore   from 'appRoot/stores/users';
 
 import Session     from 'appRoot/stores/sessionContext';
 
+import Loader      from 'appRoot/components/loader';
+
 let dateFormat    = 'MM/DD/YYYY HH:mm:ss'
 ,   RouteHandler  = Router.RouteHandler
 ,   Route         = Router.Route
@@ -65,7 +67,7 @@ export default React.createClass({
 		return post.title || this.getUserFromPost(post).blogName;
 	},
 	render: function () {
-		if (this.state.loading) { return <div>loading</div>; }
+		if (this.state.loading) { return <div><Loader /></div>; }
 		var post = this.state.post
 		,   user = this.getUserFromPost(post)
 		,   name = user.firstName && user.lastName ? 
@@ -102,16 +104,19 @@ export default React.createClass({
 		) : (
 			// FULL POST VIEW
 			<div className="post-view-full">
-				<h2>
-					<img className="profile-img" src={user.profileImageData} />
-					<div className="post-metadata">
-						<strong>{this.getPostTitle(post)}</strong>
-						<span className="user-name">{name}</span>
-						<em>{Moment(post.date, 'x').format(dateFormat)}</em> 
-					</div> 
-				</h2>
-				<section className="post-body" dangerouslySetInnerHTML={{__html: post.body}}>
-				</section>
+
+				<div className="post-view-container">
+					<h2>
+						<img className="profile-img" src={user.profileImageData} />
+						<div className="post-metadata">
+							<strong>{this.getPostTitle(post)}</strong>
+							<span className="user-name">{name}</span>
+							<em>{Moment(post.date, 'x').format(dateFormat)}</em> 
+						</div> 
+					</h2>
+					<section className="post-body" dangerouslySetInnerHTML={{__html: post.body}}>
+					</section>
+				</div>
 			</div>
 
 		);

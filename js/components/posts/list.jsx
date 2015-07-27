@@ -1,4 +1,4 @@
-import React       from 'react';
+import React       from 'react/addons';
 import Reflux      from 'reflux';
 import Router      from 'react-router';
 import Moment      from 'moment';
@@ -88,13 +88,14 @@ export default React.createClass({
 			this.state.page, 
 			Aug(this.state.search ? {q: this.state.search} : {}, this.props.params)
 		).then(function (data) {
-				this.setState({
-					loading: false,
-					posts: this.state.posts.concat(data),
-					hitmax: data.length === 0 || data.length < Config.pageSize,
-					page: this.state.page+1
-				});
-			}.bind(this)); 
+			// user may navigate away - changing state would cause a warning
+			this.isMounted() && this.setState({
+				loading: false,
+				posts: this.state.posts.concat(data),
+				hitmax: data.length === 0 || data.length < Config.pageSize,
+				page: this.state.page+1
+			});
+		}.bind(this)); 
 	},
 	render: function () {
 		var postsUI = this.state.posts.map(function (post) {

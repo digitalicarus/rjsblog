@@ -24,7 +24,7 @@ export default React.createClass({
 		e.preventDefault(); 
 		e.stopPropagation(); 
 
-		Actions.login(detail.userName, detail.password)
+		Actions.login(detail.username, detail.password)
 			.then(function () {
 				console.log("SUCCESS", arguments);
 				this.transitionTo('/', { pageNum: 1 });
@@ -40,7 +40,7 @@ export default React.createClass({
 			<form className="login-form" onSubmit={this.logIn}>
 				<fieldset>
 					<legend>Log In</legend>
-					<BasicInput name="userName" type="text" placeholder="username" />
+					<BasicInput name="username" type="text" placeholder="username" />
 					<BasicInput name="password" type="password" placeholder="password" />
 					{ this.state.loginError && <aside className="error">{this.state.loginError}</aside> }
 					<button type="submit">Log In</button>

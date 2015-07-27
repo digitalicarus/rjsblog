@@ -23,7 +23,12 @@ export default React.createClass({
 				<li key={v.id}>
 					<Link to="view-user" params={{ userId: v.id }}>
 						<img className="profile-img small" src={v.profileImageData}/>
-						{v.username}
+						<div className="user-meta">
+							{v.blogName}
+							<small>
+								{v.firstName}&nbsp;{v.lastName}
+							</small>
+						</div>
 					</Link>
 				</li>
 			);

@@ -1,4 +1,4 @@
-import React     from 'react';
+import React     from 'react/addons';
 import Router    from 'react-router';
 import Reflux    from 'reflux';
 import Quill     from 'quill';
@@ -9,17 +9,27 @@ import Actions    from 'appRoot/actions/actions';
 import BasicInput from 'appRoot/components/basicInput';
 import Loader     from 'appRoot/components/loader';
 import PostStore  from 'appRoot/stores/posts';
-import FT         from 'appRoot/fnTemplate';
 
 import Session    from 'appRoot/stores/sessionContext';
+
+import {formMixins} from 'appRoot/utility';
+
+let update = React.addons.update;
 
 export default React.createClass({
 	mixins: [
 		Reflux.connect(Session, 'session'),
-		Router.Navigation
+		Router.Navigation,
+		formMixins
 	],
 	getInitialState: function () {
-		return { loading: true };
+		return { loading: true, validity: {}, post: {} };
+	},
+	constraints: {
+		title: {
+			required: true,
+			minlength: 5
+		}
 	},
 	componentWillMount: function () {
 		this.editMode   = this.props.params.hasOwnProperty('postId');
@@ -32,7 +42,9 @@ export default React.createClass({
 			Actions.getPost(this.postId)
 				.then(function (post) {
 					setTimeout(function () {
+						console.log("POST", post);
 						this.setState({ post: post, loading: false });
+						this.initQuill(post.body);
 					}.bind(this), 2000);
 				}.bind(this))
 				['catch'](function (err) {
@@ -42,7 +54,7 @@ export default React.createClass({
 	},
 	componentDidMount: function () {
 		var newPostTmpl = '<div>Hello World!</div><div><b>This</b> is my story...</div><div><br/></div>';
-		this.initQuill(newPostTmpl);
+		!this.editMode && this.initQuill(newPostTmpl);
 	},
 	initQuill: function (html) {
 		if (!this.quill) {
@@ -63,21 +75,34 @@ export default React.createClass({
 		var postBody = this.quill.getHTML().replace(/data-reactid="[^"]+"/g, '')
 		,   fullText = this.quill.getText()
 		,   summary  = fullText.slice(0, Config.postSummaryLength)
+		,   errors   = this.validateField('title');
 		;
 
-		Actions.addPost({
-			title: this.refs.title.getDOMNode().value,
-			body: postBody,
-			user: this.state.session.id,
-			date: Moment().valueOf(), // unix UTC milliseconds
-			summary: summary
-		})
-		.then(function (result) {
-			// go to newly created entry
-			this.transitionTo('view-post', {postId: result.body.id});
-		}.bind(this))
-		;
 		e.preventDefault();
+		if(errors.length > 0) { 
+			this.setState(update(this.state, { validity: { title: { $set: errors[0].msg } } }));
+			this.getInputEle('title').focus();
+		} else {
+			Actions.modifyPost({
+				title: this.getInputEle('title').value,
+				body: postBody,
+				user: this.state.session.id,
+				date: Moment().valueOf(), // unix UTC milliseconds
+				summary: summary
+			}, this.postId)
+			.then(function (result) {
+				// go to newly created entry
+				this.transitionTo('view-post', {postId: result.body.id});
+			}.bind(this))
+			;
+		}
+	},
+	titleChange: function (e) {
+		this.setState(update(this.state, { 
+			post: { 
+				title: { $set: e.target.value }
+			}
+		}));
 	},
 	// form parts of component is always the same so render won't diff
 	render: function () {
@@ -94,8 +119,11 @@ export default React.createClass({
 						type="text" 
 						ref="title" 
 						name="title" 
-						defaultValue={this.post ? this.post.title : null}
-						placeholder="post title" value={this.postTitle} />
+						value={this.state.post.title}
+						error={this.state.validity.title}
+						onChange={this.titleChange}
+						placeholder="post title"  
+					/>
 					<hr/>
 					<br/>
 					<div className="rich-editor">
