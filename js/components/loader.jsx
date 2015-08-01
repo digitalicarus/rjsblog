@@ -11,12 +11,14 @@ export default React.createClass({
 			'inline': this.props.inline
 		});
 		return (
-			<div className={classes}>
-				<aside></aside>
-				<aside></aside>
-				<aside></aside>
-				<aside></aside>
-				<aside></aside>
+			<div className="loader">
+				<div className={classes}>
+					<aside></aside>
+					<aside></aside>
+					<aside></aside>
+					<aside></aside>
+					<aside></aside>
+				</div>
 			</div>
 		);
 	}

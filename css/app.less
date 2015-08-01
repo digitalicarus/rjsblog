@@ -13,6 +13,7 @@ a {
 	cursor: pointer;
 }
 
+// layout
 .app-container {
 	height: 100%;
 
@@ -40,6 +41,7 @@ a {
 	}
 }
 
+// standard across application
 fieldset {
 	border: none;
 
@@ -64,32 +66,34 @@ fieldset {
 		margin: 20px 0 0 0;
 	}
 
-	hr {
-		width: 50px;
-		content: '';
-		position: relative;
 
-		border-width: 0 0 0 0;
-		height: 20px;
-
-		&:before {
-			position: absolute;
-			display: block;
-		color: #aaa;
-			content: '§';
-			font-size: 18px;
-			transform: scaleX(6) rotateZ(-90deg) ;
-			height: 10px;
-			font-weight: 100;
-			line-height: 10px;
-			width: 20px;
-			text-align: center;
-			left: 50%;
-			margin-left: -10px;
-			top: 5px;
-		}
-	}
 }  
+
+hr {
+	width: 50px;
+	content: '';
+	position: relative;
+
+	border-width: 0 0 0 0;
+	height: 20px;
+
+	&:before {
+		position: absolute;
+		display: block;
+	color: #aaa;
+		content: '§';
+		font-size: 18px;
+		transform: scaleX(6) rotateZ(-90deg) ;
+		height: 10px;
+		font-weight: 100;
+		line-height: 10px;
+		width: 20px;
+		text-align: center;
+		left: 50%;
+		margin-left: -10px;
+		top: 5px;
+	}
+} 
 
 button {
 	background-color: #bbb;
@@ -151,13 +155,18 @@ img.profile-img {
 @import "components/appHeader.less";
 @import "components/basicInput.less";
 @import "components/loader.less";
+
 @import "components/posts/list.less";
+@import "components/users/view.less";
+
 @import "views/login.less";
 @import "views/posts/edit.less";
 @import "views/posts/list.less";
 @import "views/posts/view.less";
+
 @import "views/users/edit.less";
 @import "views/users/list.less";
+@import "views/users/view.less";
 
 @import "vendor/quill.snow.less";
 

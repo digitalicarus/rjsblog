@@ -38,11 +38,9 @@ export default React.createClass({
 		}
 	},
 	getUserFromPost: function (post) {
-
-			return this.state.users.find(function (user) {
-				return user.id === post.user;
-			})
-
+		return this.state.users.find(function (user) {
+			return user.id === post.user;
+		});
 	},
 	getPost: function () {
 		if (this.isMounted()) {
@@ -67,7 +65,7 @@ export default React.createClass({
 		return post.title || this.getUserFromPost(post).blogName;
 	},
 	render: function () {
-		if (this.state.loading) { return <div><Loader /></div>; }
+		if (this.state.loading) { return <Loader />; }
 		var post = this.state.post
 		,   user = this.getUserFromPost(post)
 		,   name = user.firstName && user.lastName ? 

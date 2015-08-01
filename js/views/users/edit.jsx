@@ -134,9 +134,8 @@ export default React.createClass({
 	render: function () {
 		var isnew = !this.loggedIn;
 
-		console.log("VALIDITY", this.state.validity);
-
-		// noValidate disables native validation to avoid react collisions with native state
+		// noValidate disables native validation 
+		// to avoid react collisions with native state
 		return (
 			<form ref="form" className="user-edit" name="useredit" onSubmit={this.editUser} noValidate>
 			<fieldset>

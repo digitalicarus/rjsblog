@@ -21,7 +21,7 @@ export default React.createClass({
 		return (
 			<div className="post-list-view">
 				<PostList />
-				<div className="users-and-tags">
+				<div className="users-list">
 					<UserList />
 				</div>
 			</div>
