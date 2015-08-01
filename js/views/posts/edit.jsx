@@ -5,7 +5,7 @@ import Quill     from 'quill';
 import Moment    from 'moment';
 
 import Config     from 'appRoot/appConfig';
-import Actions    from 'appRoot/actions/actions';
+import Actions    from 'appRoot/actions';
 import BasicInput from 'appRoot/components/basicInput';
 import Loader     from 'appRoot/components/loader';
 import PostStore  from 'appRoot/stores/posts';

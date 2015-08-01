@@ -1,5 +1,5 @@
 import Reflux  from 'reflux';
-import Actions from 'appRoot/actions/actions';
+import Actions from 'appRoot/actions';
 import Router  from 'react-router';
 
 export default Reflux.createStore({

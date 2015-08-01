@@ -5,7 +5,7 @@ import Moment      from 'moment';
 import Aug         from 'aug';
 
 import Config      from 'appRoot/appConfig';
-import Actions     from 'appRoot/actions/actions';
+import Actions     from 'appRoot/actions';
 
 import PostStore   from 'appRoot/stores/posts';
 import UserStore   from 'appRoot/stores/users';

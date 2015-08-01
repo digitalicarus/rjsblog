@@ -3,7 +3,7 @@ import Reflux     from 'reflux';
 import Router     from 'react-router';
 import Moment     from 'moment';
 
-import Actions    from 'appRoot/actions/actions';
+import Actions    from 'appRoot/actions';
 
 import UserList   from 'appRoot/views/users/list';
 import PostList   from 'appRoot/components/posts/list';

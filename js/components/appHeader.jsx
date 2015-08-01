@@ -4,7 +4,7 @@ import React        from 'react';
 import Reflux       from 'reflux';
 import Router       from 'react-router';
 
-import Actions      from 'appRoot/actions/actions';
+import Actions      from 'appRoot/actions';
 import SessionStore from 'appRoot/stores/sessionContext';
  
 let Link = Router.Link;

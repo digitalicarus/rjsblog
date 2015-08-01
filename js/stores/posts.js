@@ -1,5 +1,5 @@
 import Reflux  from 'reflux';
-import Actions from 'appRoot/actions/actions';
+import Actions from 'appRoot/actions';
 import Request from 'superagent';
 import Config  from 'appRoot/appConfig';
 import Aug     from 'aug';

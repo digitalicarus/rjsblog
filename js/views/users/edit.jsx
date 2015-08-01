@@ -3,7 +3,7 @@ import Reflux    from 'reflux';
 import Router    from 'react-router';
 
 import BasicInput   from 'appRoot/components/basicInput';
-import Actions      from 'appRoot/actions/actions';
+import Actions      from 'appRoot/actions';
 import SessionStore from 'appRoot/stores/sessionContext';
 import UserStore    from 'appRoot/stores/users';
 
