@@ -15,10 +15,16 @@ module.exports = {
 	plugins: [
 		new webpack.HotModuleReplacementPlugin(),
 		new webpack.NoErrorsPlugin(),
-		// example of polyfilling with webpack https://gist.github.com/Couto/b29676dd1ab8714a818f
-		new webpack.ProvidePlugin({
-			'arrayutils': 'imports?this=>global!exports?global.arrayutils!arrayutils'
-		})
+
+		// example of polyfilling with webpack 
+		// OR just include the babel runtime option below and get Promises, Generators, Map, and much more!
+		// You can even get forward looking proposed features for ES7 and beyond with the 
+		// stage query parameter below https://babeljs.io/docs/usage/experimental/ welcome
+		// to the future of JavaScript! :)
+		//
+		//new webpack.ProvidePlugin({
+		//	'arrayutils': 'imports?this=>global!exports?global.arrayutils!arrayutils'
+		//})
 	],
 	resolve: {
 		// require files in app without specifying extensions
@@ -40,7 +46,7 @@ module.exports = {
 					path.join(__dirname, 'js') // files to apply this loader to
 				], 
 				exclude: '/node-modules/', // don't transform all our node modules! 
-				loaders: ['react-hot', 'babel'] // loaders process from right to left
+				loaders: ['react-hot', 'babel?optional=runtime'] // loaders process from right to left
 			}
         ]
     }

@@ -1,13 +1,6 @@
 import Reflux from 'reflux';
 
 export default Reflux.createActions({
-	'getPostsByPage': { 
-		asyncResult: true, /* shortcut for completed/failed children */ 
-		children:    [] // any other subactions
-	},
-	'getPostsBySearch': {
-		asyncResult: true
-	},
 	'getPost': {
 		asyncResult: true
 	},

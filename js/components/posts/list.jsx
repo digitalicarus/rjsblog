@@ -2,7 +2,6 @@ import React       from 'react/addons';
 import Reflux      from 'reflux';
 import Router      from 'react-router';
 import Moment      from 'moment';
-import Aug         from 'aug';
 
 import Config      from 'appRoot/appConfig';
 import Actions     from 'appRoot/actions';
@@ -25,8 +24,7 @@ let RouteHandler  = Router.RouteHandler
  
 export default React.createClass({
 	mixins: [
-		Reflux.connect(UserStore, 'users'),
-		Reflux.connect(SearchStore, 'search')
+		Reflux.connect(UserStore, 'users')
 	],
 	getInitialState: function () {
 		return {
@@ -79,23 +77,29 @@ export default React.createClass({
 		}
 	},
 	getNextPage: function () {
-		if (this.state.loading) { return; }
 		this.setState({
 			loading: true
 		});
 
-		Actions.getPostsByPage(
+		PostStore.getPostsByPage(
 			this.state.page, 
-			Aug(this.state.search ? {q: this.state.search} : {}, this.props.params)
-		).then(function (data) {
+			Object.assign({}, this.state.search ? {q: this.state.search} : {}, this.props.params)
+		).then(function (results) {
+			var data = results.results;
+
+			// make sure we put the data where it goes.
+			// if many results resolved at once trust the request data for start and end
+			// instead of some internal state
+			Array.prototype.splice.apply(this.state.posts, [results.start, results.end].concat(data));
+
 			// user may navigate away - changing state would cause a warning
+			// so, check if we're mounted when this promise resolves
 			this.isMounted() && this.setState({
 				loading: false,
-				posts: this.state.posts.concat(data),
 				hitmax: data.length === 0 || data.length < Config.pageSize,
 				page: this.state.page+1
 			});
-		}.bind(this)); 
+		}.bind(this), function (err) {});
 	},
 	render: function () {
 		var postsUI = this.state.posts.map(function (post) {
@@ -107,7 +111,7 @@ export default React.createClass({
 				<ul>
 					{postsUI}
 				</ul>
-				{this.state.hitmax ? 
+				{this.state.hitmax && !this.state.loading ? 
 					(
 						<div className="total-posts-msg">
 							showing { this.state.posts.length } posts
