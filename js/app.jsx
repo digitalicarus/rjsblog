@@ -7,6 +7,8 @@ import CSS       from '../css/app.less';
 
 import AppHeader from 'appRoot/components/appHeader';
 
+import Login     from 'appRoot/views/login';
+
 import PostList  from 'appRoot/views/posts/list';
 import PostView  from 'appRoot/views/posts/view';
 import PostEdit  from 'appRoot/views/posts/edit';
@@ -15,13 +17,9 @@ import UserList  from 'appRoot/views/users/list';
 import UserView  from 'appRoot/views/users/view';
 import UserEdit  from 'appRoot/views/users/edit';
 
-import Login     from 'appRoot/views/login';
-import Search    from 'appRoot/views/search';
-
 // polyfills
 import ArrayUtils from 'appRoot/vendor/polyfills/arrayutils';
 
-// This reflux demo app recommended https://github.com/echenley/react-news
 let RouteHandler  = Router.RouteHandler
 ,   Route         = Router.Route
 ,   NotFoundRoute = Router.NotFoundRoute
@@ -37,7 +35,7 @@ let AppLayout = React.createClass({
 			<div className="app-container">
 				<AppHeader />
 				<main>
-					<RouteHandler { ...this.props } /*user={ this.state.user }*/ />
+					<RouteHandler { ...this.props } />
 				</main>
 			</div>
 		);
@@ -92,20 +90,15 @@ let routes = (
 			path="/login" 
 			handler={ Login }
 		/>
-		<Route
-			name="search"
-			path="/search"
-			handler={ Search }
-		/>
 		<DefaultRoute handler={ PostList } />
 		<NotFoundRoute handler={ PostList } />
     </Route>
 );
 
 Router.run(routes, function(Handler, state) {
-	// can name the params in the handler what you want as an attr  routeParams={ state.params }
-	// but the handler will automatically receive the state.params as a prop called 'params'
+	// you can name the params in the handler what you want as an attr 
+	// routeParams={ state.params }
+	// but the handler will automatically receive the state.params 
+	// as a prop called 'params'
     React.render(<Handler />, document.body);
 });
-
-
