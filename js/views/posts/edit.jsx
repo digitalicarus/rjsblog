@@ -12,7 +12,7 @@ import PostStore  from 'appRoot/stores/posts';
 
 import Session    from 'appRoot/stores/sessionContext';
 
-import {formMixins} from 'appRoot/utility';
+import {formMixins} from 'appRoot/mixins/utility';
 
 let update = React.addons.update;
 

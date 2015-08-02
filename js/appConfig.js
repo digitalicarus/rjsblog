@@ -1,5 +1,5 @@
 export default {
-	pageSize: 5,
+	pageSize: 10,
 	apiRoot: '//localhost:3000',
 	postSummaryLength: 512,
 	loadTimeSimMs: 2000

@@ -8,7 +8,7 @@ import SessionStore from 'appRoot/stores/sessionContext';
 import UserStore    from 'appRoot/stores/users';
 
 // use {symbolA, symbolB} notation to import multiple items from a file with multiple exports
-import {validate, formMixins} from 'appRoot/utility';
+import {formMixins} from 'appRoot/mixins/utility';
 
 let update = React.addons.update;
 
