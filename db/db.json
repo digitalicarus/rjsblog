@@ -41,10 +41,10 @@
     },
     {
       "title": "TEST2",
-      "body": "<div>Hello World!</div><div><b>This</b> is my story...</div><div><br></div>",
+      "body": "<div>Hello World!</div><div><b>This</b> is my story...</div><div>YAY!!!!22</div>",
       "user": 1,
-      "date": 1438540607125,
-      "summary": "Hello World!\nThis is my story...\n\n",
+      "date": 1438560130510,
+      "summary": "Hello World!\nThis is my story...\nYAY!!!!22\n",
       "id": 6
     }
   ],
