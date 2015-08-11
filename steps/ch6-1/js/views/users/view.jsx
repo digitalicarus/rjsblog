@@ -5,9 +5,9 @@ import Router  from 'react-router';
 export default React.createClass({
 	render: function () {
 		return (
-			<form className="login-form">
-				login form
-			</form>
+			<div className="user-view">
+				user view
+			</div>
 		);
 	}
 });

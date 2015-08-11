@@ -5,9 +5,9 @@ import Router  from 'react-router';
 export default React.createClass({
 	render: function () {
 		return (
-			<header className="app-header">
-				app header
-			</header>
+			<form className="post-edit">
+				post edit
+			</form>
 		);
 	}
 });
