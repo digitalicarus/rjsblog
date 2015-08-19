@@ -6,7 +6,11 @@ import UserStore  from 'appRoot/stores/users';
 export default React.createClass({
 	mixins: [
 		Reflux.connectFilter(UserStore, 'user', function (users) {
-			return users.find(function (user) {
+			// This syntax is necessary because babel runtime
+			// polyfill statically analyzes code and cannot infer
+			// the type of users and, by extension, the correct 
+			// "find" method
+			return Array.find(users, function (user) {
 				return user.id === parseInt(this.props.userId, 10);
 			}.bind(this));
 		})

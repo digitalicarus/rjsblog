@@ -14,9 +14,6 @@ import Session     from 'appRoot/stores/sessionContext';
 import Loader      from 'appRoot/components/loader';
 
 let dateFormat    = 'MM/DD/YYYY HH:mm:ss'
-,   RouteHandler  = Router.RouteHandler
-,   Route         = Router.Route
-,   DefaultRoute  = Router.DefaultRoute
 ,   Link          = Router.Link
 ;
  
@@ -38,7 +35,7 @@ export default React.createClass({
 		}
 	},
 	getUserFromPost: function (post) {
-		return this.state.users.find(function (user) {
+		return Array.find(this.state.users, function (user) {
 			return user.id === post.user;
 		});
 	},

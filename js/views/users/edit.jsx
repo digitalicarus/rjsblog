@@ -12,20 +12,6 @@ import {formMixins} from 'appRoot/mixins/utility';
 
 let update = React.addons.update;
 
-/*
-	a simple, albeit non-secure hash from string
-*/
-function getHashCode (str) {
-	var hash = 0;
-	if (str.length == 0) return hash;
-	for (i = 0; i < str.length; i++) {
-		char = str.charCodeAt(i);
-		hash = ((hash<<5)-hash)+char;
-		hash = hash & hash; // Convert to 32bit integer
-	}
-	return hash;
-}
-
 export default React.createClass({
 	mixins: [
 		Reflux.connect(SessionStore, 'session'),
@@ -35,6 +21,12 @@ export default React.createClass({
 	],
 	getInitialState: function () {
 		return { validity: {} };
+	},
+	componentWillMount: function () {
+		this.setPlaceholderImage();
+	},
+	componentWillUpdate: function () {
+		this.loggedIn = this.state.session.hasOwnProperty('userId');
 	},
 	constraints: {
 		'username': {
@@ -109,6 +101,8 @@ export default React.createClass({
 		,   reader = new FileReader()
 		;
 
+		e.preventDefault();
+
 		reader.onload = this.imageLoadedHandler;
 		reader.readAsDataURL(file);
 	},
@@ -122,22 +116,20 @@ export default React.createClass({
 			});
 		}
 	},
-	componentWillMount: function () {
-		this.setPlaceholderImage();
-	},
-	componentWillUpdate: function () {
-		this.loggedIn = this.state.session.hasOwnProperty('userId');
-	},
 	chooseFile: function () {
 		this.getInputEle('profileImage').click();
 	},
 	render: function () {
-		var isnew = !this.loggedIn;
+		var isnew = !this.state.session.loggedIn;
 
 		// noValidate disables native validation 
 		// to avoid react collisions with native state
 		return (
-			<form ref="form" className="user-edit" name="useredit" onSubmit={this.editUser} noValidate>
+			<form ref="form" 
+				className="user-edit" 
+				name="useredit" 
+				onSubmit={function (e) { e.preventDefault(); }} 
+				noValidate>
 			<fieldset>
 				<legend>{isnew ? 'become an ' : 'edit'} author</legend>
 
@@ -180,7 +172,7 @@ export default React.createClass({
 				<BasicInput type="text"  name="lastName"  placeholder="last name" />
 				<BasicInput type="email" name="email"     placeholder="email" />
    			
-				<button type="submit">{ isnew ? "I'm ready to write" : "make changes" }</button>
+				<button type="submit" onClick={this.editUser}>{ isnew ? "I'm ready to write" : "make changes" }</button>
 			</fieldset>
 			</form>
 		); 

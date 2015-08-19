@@ -17,9 +17,6 @@ import UserList  from 'appRoot/views/users/list';
 import UserView  from 'appRoot/views/users/view';
 import UserEdit  from 'appRoot/views/users/edit';
 
-// polyfills
-import ArrayUtils from 'appRoot/vendor/polyfills/arrayutils';
-
 let RouteHandler  = Router.RouteHandler
 ,   Route         = Router.Route
 ,   NotFoundRoute = Router.NotFoundRoute

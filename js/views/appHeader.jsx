@@ -19,17 +19,6 @@ export default React.createClass({
 		// from the navigation mixin
 		this.transitionTo('/');
 	},
-	getGreeting: function () {
-		var greeting = '';
-		if (this.state.session.username) {
-			greeting = 'Hello' + this.state.session.firstName ? 
-				this.state.session.firstName : this.state.session.username
-				;
-			greeting += ', ';
-		}
-
-		return greeting;
-	},
 	componentWillMount: function () {
 		var searchVal = this.context.router.getCurrentQuery().query;
 		Actions.search(searchVal);
