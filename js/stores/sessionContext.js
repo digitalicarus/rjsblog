@@ -18,6 +18,8 @@ export default Reflux.createStore({
 			if (res.ok && res.body instanceof Array && res.body.length > 0) {
 				this.context          = res.body[0];
 				this.context.loggedIn = true;
+				this.context.profileImageData = null;
+
 				this.trigger(this.context);
 				action.completed();
 
