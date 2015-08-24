@@ -43,6 +43,13 @@ export default Reflux.createStore({
 						resolve({ start: query._start, end: query._end, results: results });
 					}
 					if (res.ok) {
+						// if q param (search) filter by other params, cause it doesn't
+						// problem with json-server, realistically we'd fix this on the server
+						if (params.q) {
+							results = results.filter(function (post) {
+								return params.user ? post.user == params.user : true;
+							});
+						} 
 						Config.loadTimeSimMs ? setTimeout(complete, Config.loadTimeSimMs) : complete();
 					} else {
 						reject(Error(err));

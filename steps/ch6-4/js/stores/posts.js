@@ -6,6 +6,7 @@ import Config  from 'appRoot/appConfig';
 export default Reflux.createStore({
 	listenables: Actions,
 	endpoint: Config.apiRoot + '/posts',
+	// posts, init, and getInitialState are removed
 	getPostsByPage: function (page = 1, params) {
 		var start   = Config.pageSize * (page-1)
 		,   end     = start + Config.pageSize
@@ -62,6 +63,7 @@ export default Reflux.createStore({
 					id: id
 				})
 				.end(function (err, res) {
+					// Here we no longer insert into the local posts member
 					if (res.ok) {
 						if (res.body.length > 0) {
 							Actions.getPost.completed(res.body[0]);

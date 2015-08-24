@@ -1,23 +1,16 @@
 import React       from 'react/addons';
 import Reflux      from 'reflux';
-import Router      from 'react-router';
-import Moment      from 'moment';
 
 import Config      from 'appRoot/appConfig';
-import Actions     from 'appRoot/actions';
 
 import PostStore   from 'appRoot/stores/posts';
-import UserStore   from 'appRoot/stores/users';
 
 import PostView    from 'appRoot/views/posts/view';
 
 import Loader      from 'appRoot/components/loader';
 
 export default React.createClass({
-	mixins: [
-		Reflux.connect(UserStore, 'users')
-	],
-	getInitialState: function () {
+   getInitialState: function () {
 		return {
 			page: 1,
 			posts: []
